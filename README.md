@@ -17,6 +17,7 @@ GestureTouch.WPF
 ===================
 The WPF toolkit supports i) full window support by deriving your WPF window from TouchWindow or ii) per-UI element support by wrapping any UI element in the GestureTouchPipeline, which gives the user access to the gesture touch events for that UI element.
 
+## TouchWindow
 ```
 public class TestWindow : TouchWindow
     {
@@ -61,7 +62,7 @@ public class TestWindow : TouchWindow
         }
     }
 ```
-
+## GestureTouchPipeline
 ```
  public class TestWindow : Window
     {
