@@ -116,6 +116,7 @@ public class TestWindow : TouchWindow
 
 GestureTouch.Native
 ===================
+The native toolkit only gives access to the window touches. Since in this approach, all default WPF touch events are disabled, the developer has to manage UI interaction themselves.
 
 ```
 public class TestWindow : NativeTouchWindow
