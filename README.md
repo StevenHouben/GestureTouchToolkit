@@ -7,7 +7,7 @@ API (GestureTouch.WPF) or by hooking into the native events send by the touchscr
 
 Because the window handle can only be attached to one touch handler (limitation of
 Windows), you can only use the integrated WPF detector or the Native detector. Note
-that the WPF integration is slower than the Native, but using the Native disable
+that the WPF integration is slower than the Native, but using the Native disables
 all build in touch support for WPF, meaning you have to do your own UIElement
 touch detections etc. I would only recommend using the Native toolkit when drawing
 your own User Interface.
