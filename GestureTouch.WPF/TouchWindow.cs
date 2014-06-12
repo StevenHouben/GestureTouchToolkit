@@ -59,4 +59,5 @@ namespace GestureTouch
             GestureTouchDown(this,new GestureTouchEventArgs(e.StylusDevice.Id,touchPoint,e.Timestamp));
         }
     }
+    
 }

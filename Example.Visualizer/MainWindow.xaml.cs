@@ -8,11 +8,12 @@ using Microsoft.Surface.Presentation.Controls;
 
 namespace TouchFingerDetection
 {
+   
     public partial class MainWindow
     {
         readonly Dictionary<int, ScatterViewItem> _touches = new Dictionary<int, ScatterViewItem>();
 
-        private bool showDetails = false;
+        private bool _showDetails;
         public MainWindow()
         {
             InitializeComponent();
@@ -28,15 +29,15 @@ namespace TouchFingerDetection
             KeyUp += MainWindow_KeyUp;
         }
 
-        void MainWindow_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        void MainWindow_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.D:
-                    showDetails = true;
+                    _showDetails = true;
                     break;
                 case Key.N:
-                    showDetails = false;
+                    _showDetails = false;
                     break;
             }
         }
@@ -82,7 +83,7 @@ namespace TouchFingerDetection
             _touches[id].Height = point.Size.Height * 9.6;
             _touches[id].Center = point.Position;
 
-            if (showDetails)
+            if (_showDetails)
             {
                 if (_touches[id].Content == null)
                 {
