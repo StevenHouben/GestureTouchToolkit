@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GestureTouch.Controls
@@ -15,10 +14,12 @@ namespace GestureTouch.Controls
 
         public Dictionary<Range<double>,Brush> Visualizations = new Dictionary<Range<double>, Brush>();
 
+        public event EventHandler<GestureTouchEventArgs> GestureTouchDown = delegate { };
+        public event EventHandler<GestureTouchEventArgs> GestureTouchMove = delegate { };
+        public event EventHandler<GestureTouchEventArgs> GestureTouchUp = delegate { };
+
         public bool ShowTrackingDetails { get; set; }
-
         public double TouchSizeScale { get; set; }
-
         public double MinimumSize { get; set; }
         public double MaximumSize { get; set; }
 
@@ -55,6 +56,8 @@ namespace GestureTouch.Controls
             _canvas.Children.Add(item);
 
             UpdateVisualTouchPoint(e.Id, e.TouchPoint);
+
+            GestureTouchDown(sender, e);
         }
         void MainWindow_GestureTouchUp(object sender, GestureTouchEventArgs e)
         {
@@ -64,11 +67,13 @@ namespace GestureTouch.Controls
             _canvas.Children.Remove(_touches[e.Id]);
             _touches.Remove(e.Id);
 
+            GestureTouchUp(sender, e);
         }
 
         void MainWindow_GestureTouchMove(object sender, GestureTouchEventArgs e)
         {
             UpdateVisualTouchPoint(e.Id, e.TouchPoint);
+            GestureTouchMove(sender, e);
         }
 
         private void UpdateVisualTouchPoint(int id, GestureTouchPoint point)
