@@ -52,6 +52,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\TouchVisualizer.cs" />
+    <Compile Include="DefaultTouchRanges.cs" />
     <Compile Include="GestureTouchEventArgs.cs" />
     <Compile Include="GestureTouchPoint.cs" />
     <Compile Include="GestureTouchPipeline.cs" />

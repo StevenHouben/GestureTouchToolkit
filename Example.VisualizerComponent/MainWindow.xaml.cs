@@ -1,6 +1,6 @@
-﻿namespace TouchFingerDetection
+﻿namespace Example.VisualizerComponent
 {
-    public partial class MainWindow
+    public partial class MainWindow 
     {
         public MainWindow()
         {

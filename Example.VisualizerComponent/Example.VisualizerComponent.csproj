@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D3A44EBB-270B-47A2-9354-E107B63935B8}</ProjectGuid>
+    <ProjectGuid>{DBEB0788-DE3D-4580-B9B4-FAAC5D2508E8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TouchFingerDetection</RootNamespace>
-    <AssemblyName>TouchFingerDetection</AssemblyName>
+    <RootNamespace>Example.VisualizerComponent</RootNamespace>
+    <AssemblyName>Example.VisualizerComponent</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,10 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -47,8 +44,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -100,8 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GestureTouch.WPF\GestureTouch.WPF.csproj">
-      <Project>{3d63a62f-90d3-454c-82cb-2cbb0183c337}</Project>
-      <Name>GestureTouch</Name>
+      <Project>{3D63A62F-90D3-454C-82CB-2CBB0183C337}</Project>
+      <Name>GestureTouch.WPF</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
