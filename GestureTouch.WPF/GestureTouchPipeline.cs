@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -31,30 +31,35 @@ namespace GestureTouch
             _element = element;
             _element.PreviewStylusDown += TouchWindow_PreviewStylusDown;
             _element.PreviewStylusMove += TouchWindow_PreviewStylusMove;
-            _element.PreviewStylusUp += TouchWindow_PreviewStylusUp;
-
-            InputFilter = 2;
+            _element.PreviewTouchUp += _element_PreviewTouchUp;
+            InputFilter = 5;
             InputSizeScale = 1;
         }
 
-        void TouchWindow_PreviewStylusUp(object sender, StylusEventArgs e)
+        void _element_PreviewTouchUp(object sender, TouchEventArgs e)
         {
-            if (!_touches.ContainsKey(e.StylusDevice.Id))
+            if (!_touches.ContainsKey(e.TouchDevice.Id))
                 return;
 
-            var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
-            touchPointSize.Width    *= InputSizeScale;
-            touchPointSize.Height   *= InputSizeScale;
-            var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Up);
-            GestureTouchUp(_element, new GestureTouchEventArgs(e.StylusDevice.Id,touchPoint,e.Timestamp));
+            var touchPointSize = new Size(0,0);
+            touchPointSize.Width *= InputSizeScale;
+            touchPointSize.Height *= InputSizeScale;
+            var touchPoint = new GestureTouchPoint(e.TouchDevice, touchPointSize, e.GetTouchPoint(_element).Position, TouchAction.Up);
+            GestureTouchUp(_element, new GestureTouchEventArgs(e.TouchDevice.Id, touchPoint, e.Timestamp));
 
-            _touches.Remove(e.StylusDevice.Id);
+            _touches.Remove(e.TouchDevice.Id);
         }
+
+        //void TouchWindow_PreviewStylusUp(object sender, StylusEventArgs e)
+        //{
+            
+        //}
+
+        readonly object _moveLock = new object();
         void TouchWindow_PreviewStylusMove(object sender, StylusEventArgs e)
         {
-            if (_touchInputCounter[e.StylusDevice.Id]++ <= InputFilter) return;
-
-            _touchInputCounter[e.StylusDevice.Id] = 0;
+            lock(_moveLock)
+            {
             if (!_touches.ContainsKey(e.StylusDevice.Id))
             {
                 var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
@@ -69,12 +74,17 @@ namespace GestureTouch
             }
             else
             {
+                if (_touchInputCounter[e.StylusDevice.Id]++ <= InputFilter) return;
+
+                _touchInputCounter[e.StylusDevice.Id] = 0;
+
                 var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
                 touchPointSize.Width *= InputSizeScale;
                 touchPointSize.Height *= InputSizeScale;
 
                 var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Up);
                 GestureTouchMove(_element, new GestureTouchEventArgs(e.StylusDevice.Id, touchPoint, e.Timestamp));
+            }
             }
         }
 
