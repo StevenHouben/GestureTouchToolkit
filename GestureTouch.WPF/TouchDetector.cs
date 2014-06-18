@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,6 +12,11 @@ namespace GestureTouch
             return new Size(
                 stylusPoint.GetPropertyValue(StylusPointProperties.Width),
                 stylusPoint.GetPropertyValue(StylusPointProperties.Height));
+        }
+
+        public static bool HasTouchInput()
+        {
+            return Tablet.TabletDevices.Cast<TabletDevice>().Any(tabletDevice => tabletDevice.Type == TabletDeviceType.Touch || tabletDevice.Type == TabletDeviceType.Stylus);
         }
 
         public static string GetInputUnit(StylusPoint stylusPoint)

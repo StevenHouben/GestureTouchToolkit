@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,6 +16,12 @@ namespace GestureTouch
 
         public int InputFilter { get; set; }
         public double InputSizeScale { get; set; }
+
+        public bool HasTouchSupport {
+            get { return TouchDetector.HasTouchInput(); }
+        }
+
+        public bool HasTouchSizeSupport { get; private set; }
 
         private readonly FrameworkElement _element;
         public List<GestureTouchPoint> Touches
@@ -35,7 +40,6 @@ namespace GestureTouch
             InputFilter = 5;
             InputSizeScale = 1;
         }
-
         void _element_PreviewTouchUp(object sender, TouchEventArgs e)
         {
             if (!_touches.ContainsKey(e.TouchDevice.Id))
@@ -50,41 +54,36 @@ namespace GestureTouch
             _touches.Remove(e.TouchDevice.Id);
         }
 
-        //void TouchWindow_PreviewStylusUp(object sender, StylusEventArgs e)
-        //{
-            
-        //}
-
         readonly object _moveLock = new object();
         void TouchWindow_PreviewStylusMove(object sender, StylusEventArgs e)
         {
             lock(_moveLock)
             {
-            if (!_touches.ContainsKey(e.StylusDevice.Id))
-            {
-                var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
-                touchPointSize.Width *= InputSizeScale;
-                touchPointSize.Height *= InputSizeScale;
+                if (!_touches.ContainsKey(e.StylusDevice.Id))
+                {
+                    var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
+                    touchPointSize.Width *= InputSizeScale;
+                    touchPointSize.Height *= InputSizeScale;
 
-                var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Down);
+                    var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Down);
 
-                _touches.Add(e.StylusDevice.Id, touchPoint);
+                    _touches.Add(e.StylusDevice.Id, touchPoint);
 
-                GestureTouchDown(_element, new GestureTouchEventArgs(e.StylusDevice.Id, touchPoint, e.Timestamp));
-            }
-            else
-            {
-                if (_touchInputCounter[e.StylusDevice.Id]++ <= InputFilter) return;
+                    GestureTouchDown(_element, new GestureTouchEventArgs(e.StylusDevice.Id, touchPoint, e.Timestamp));
+                }
+                else
+                {
+                    if (_touchInputCounter[e.StylusDevice.Id]++ <= InputFilter) return;
 
-                _touchInputCounter[e.StylusDevice.Id] = 0;
+                    _touchInputCounter[e.StylusDevice.Id] = 0;
 
-                var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
-                touchPointSize.Width *= InputSizeScale;
-                touchPointSize.Height *= InputSizeScale;
+                    var touchPointSize = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
+                    touchPointSize.Width *= InputSizeScale;
+                    touchPointSize.Height *= InputSizeScale;
 
-                var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Up);
-                GestureTouchMove(_element, new GestureTouchEventArgs(e.StylusDevice.Id, touchPoint, e.Timestamp));
-            }
+                    var touchPoint = new GestureTouchPoint(e.StylusDevice, touchPointSize, e.GetPosition(_element), TouchAction.Up);
+                    GestureTouchMove(_element, new GestureTouchEventArgs(e.StylusDevice.Id, touchPoint, e.Timestamp));
+                }
             }
         }
 
@@ -94,6 +93,11 @@ namespace GestureTouch
                 _touchInputCounter[e.StylusDevice.Id] = 0;
             else
                 _touchInputCounter.Add(e.StylusDevice.Id, 0);
+
+            if (HasTouchSizeSupport) return;
+            var size = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
+            if (size.Height > 0 || size.Width > 0)
+                HasTouchSizeSupport = true;
         }
     }
 }
