@@ -18,10 +18,6 @@ namespace NativeTouchSupport
         public const int TOUCHINPUTMASKF_EXTRAINFO = 0x0002; 
         public const int TOUCHINPUTMASKF_CONTACTAREA = 0x0004;
 
-
-
-        
-
         [DllImport("user32")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool RegisterTouchWindow(System.IntPtr hWnd, uint ulFlags);

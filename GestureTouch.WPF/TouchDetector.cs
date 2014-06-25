@@ -7,11 +7,33 @@ namespace GestureTouch
 {
     public static class TouchDetector
     {
+        public static double CentimeterPerInch = 2.54d;
+        public static double PixelPerInch = 96d;
+
         public static Size GetSizeFromStylusPoint(StylusPoint stylusPoint)
         {
             return new Size(
                 stylusPoint.GetPropertyValue(StylusPointProperties.Width),
                 stylusPoint.GetPropertyValue(StylusPointProperties.Height));
+        }
+
+        public static double ComputeSizeScaleFactorFormReportedUnit(StylusPoint stylusPoint)
+        {
+            var unit = stylusPoint.Description.GetPropertyInfo(StylusPointProperties.Width).Unit;
+            var scale = 0.0;
+            switch (unit)
+            {
+                case StylusPointPropertyUnit.Centimeters:
+                    scale = CentimeterPerInch/PixelPerInch ;
+                    break;
+                case StylusPointPropertyUnit.None:
+                    scale =  (CentimeterPerInch*10)/PixelPerInch;
+                    break;
+                default:
+                    scale = PixelPerInch;
+                    break;
+            }
+            return scale;
         }
 
         public static bool HasTouchInput()

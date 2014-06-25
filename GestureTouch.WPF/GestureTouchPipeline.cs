@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+
 
 namespace GestureTouch
 {
@@ -37,9 +39,12 @@ namespace GestureTouch
             _element.PreviewStylusDown += TouchWindow_PreviewStylusDown;
             _element.PreviewStylusMove += TouchWindow_PreviewStylusMove;
             _element.PreviewTouchUp += _element_PreviewTouchUp;
+
             InputFilter = 5;
-            InputSizeScale = 1;
+            InputSizeScale =1;
+            _element.IsManipulationEnabled = true;
         }
+
         void _element_PreviewTouchUp(object sender, TouchEventArgs e)
         {
             if (!_touches.ContainsKey(e.TouchDevice.Id))
@@ -95,6 +100,9 @@ namespace GestureTouch
                 _touchInputCounter.Add(e.StylusDevice.Id, 0);
 
             if (HasTouchSizeSupport) return;
+
+            InputSizeScale = TouchDetector.ComputeSizeScaleFactorFormReportedUnit(e.StylusDevice.GetStylusPoints(_element)[0]);
+
             var size = TouchDetector.GetSizeFromStylusPoint(e.StylusDevice.GetStylusPoints(_element)[0]);
             if (size.Height > 0 || size.Width > 0)
                 HasTouchSizeSupport = true;

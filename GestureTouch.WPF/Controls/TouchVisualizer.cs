@@ -40,7 +40,8 @@ namespace GestureTouch.Controls
             wrap.GestureTouchMove += MainWindow_GestureTouchMove;
 
             ShowTrackingDetails = true;
-            TouchSizeScale = 9.6;
+
+            TouchSizeScale = 30;
             MinimumSize = 75;
             MaximumSize = 300;
         }
